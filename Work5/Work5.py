@@ -3,14 +3,17 @@ from tkinter import messagebox  # Імпортуємо модуль для сп�
 
 def check_winner(board, player):
     """Перевіряємо, чи є переможець у грі."""
+    # Перевірка по горизонталі
     for row in board:
         if all(cell == player for cell in row):
             return True
 
+    # Перевірка по вертикалі
     for col in range(3):
         if all(board[row][col] == player for row in range(3)):
             return True
 
+    # Перевірка по діагоналі
     if all(board[i][i] == player for i in range(3)) or all(board[i][2-i] == player for i in range(3)):
         return True
 
@@ -19,14 +22,17 @@ def check_winner(board, player):
 def on_click(row, col):
     """Викликається при кліку на кнопку. Обробляє хід гравця та перевіряє переможця."""
     global current_player, moves_left
+    # Перевірка, чи клітинка вільна
     if board[row][col] != " ":
         messagebox.showerror("Невірний хід", "Клітинка вже зайнята. Спробуйте ще раз.")
         return
 
+    # Збереження ходу та зміна гравця
     board[row][col] = players[current_player]
     buttons[row][col].config(text=players[current_player], state=tk.DISABLED)
     moves_left -= 1
 
+    # Перевірка переможця або нічиєї
     if check_winner(board, players[current_player]):
         messagebox.showinfo("Переможець", f"Гравець {players[current_player]} виграв!")
         reset_game()
